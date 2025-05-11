@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .journal-container
+    h1 Mon Journal Personnel
+    
+    form.entry-form(action="/journal", method="POST")
+      .form-group
+        label(for="content") Nouvelle pensée
+        textarea#content(name="content", required, rows="4")
+      button(type="submit") Ajouter
+    
+    .entries
+      if entries && entries.length > 0
+        each entry in entries
+          .entry
+            .entry-content= entry.content
+            .entry-date= new Date(entry.createdAt).toLocaleString('fr-FR')
+      else
+        p Aucune entrée dans votre journal pour le moment. 

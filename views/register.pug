@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  .auth-container.container.mt-5
+    h1.text-center.mb-4 Inscription
+    if error
+      .alert.alert-danger= error
+    
+    form(action="/register", method="POST")
+      .form-group
+        label(for="username") Nom d'utilisateur
+        input#username.form-control(type="text", name="username", required, minlength="3")
+      
+      .form-group
+        label(for="password") Mot de passe
+        input#password.form-control(type="password", name="password", required, minlength="6")
+      
+      .form-group
+        label(for="confirmPassword") Confirmer le mot de passe
+        input#confirmPassword.form-control(type="password", name="confirmPassword", required)
+      
+      button.btn.btn-primary.btn-block(type="submit") S'inscrire
+    
+    p.text-center.mt-3
+      | Déjà un compte ? 
+      a(href="/login") Se connecter 
