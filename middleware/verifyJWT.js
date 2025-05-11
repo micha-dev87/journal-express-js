@@ -6,9 +6,8 @@ const verifyJWT = async (req, res, next) => {
   try {
     const token = req.cookies.token;
 
-    // Si le token n'est pas présent, on redirige vers la page de connexion
+    // Si le token n'est pas présent, on continue sans authentification
     if (!token) {
-      req.user = null;
       return next();
     }
 
@@ -16,21 +15,22 @@ const verifyJWT = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
 
-    // Si l'utilisateur n'existe pas, on redirige vers la page de connexion
+    // Si l'utilisateur n'existe pas, on vide le cookie et on redirige
     if (!user) {
-      res.redirect("/auth");
+      res.clearCookie("token");
+      return res.redirect("/auth");
     }
 
     // On ajoute l'utilisateur et le token à la requête
     req.user = user;
     req.token = token;
 
-    next();
+    return next();
   } catch (error) {
-    // Si une erreur survient, on vide le cookie et on redirige vers la page de connexion
+    // Si une erreur survient, on vide le cookie et on redirige
     res.clearCookie("token");
     req.user = null;
-    next();
+    return res.redirect("/auth");
   }
 };
 

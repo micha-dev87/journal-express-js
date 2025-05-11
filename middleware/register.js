@@ -28,9 +28,9 @@ const register = async (req, res) => {
 
     signJWT(req, res, next);
 
-    res.redirect("/journal");
+    return res.redirect("/journal");
   } catch (error) {
-    res.render("register", {
+    return res.render("register", {
       title: "Inscription",
       error: "Une erreur est survenue lors de l'inscription",
     });

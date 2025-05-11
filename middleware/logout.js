@@ -1,7 +1,7 @@
 const logout = (req, res, next) => {
   try {
     res.clearCookie("token");
-    next();
+    return res.redirect("/auth");
   } catch (error) {
     next(error);
   }

@@ -4,6 +4,9 @@ require("dotenv").config();
 
 const auth = async (req, res, next) => {
   // Si le token est valide on redirige vers la page de journal
+  if (req.user) {
+    return res.redirect("/journal");
+  }
 
   try {
     const { username, password } = req.body;
@@ -31,11 +34,11 @@ const auth = async (req, res, next) => {
     req.user = user;
   
 
+    // On signe le token et on redirige vers la page de journal
     signJWT(req, res, next);
-
-    res.redirect("/journal");
+    return res.redirect("/journal");
   } catch (error) {
-    res.render("login", {
+    return res.render("login", {
       title: "Connexion",
       error: "Une erreur est survenue lors de la connexion",
     });

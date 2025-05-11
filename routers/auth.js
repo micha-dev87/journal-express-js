@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 
 // Route GET pour afficher le formulaire de connexion
 router.get("/", (req, res) => {
-  res.render("login", { title: "Connexion" });
+  return res.render("login", { title: "Connexion" });
 });
 
 // Route POST pour traiter la connexion

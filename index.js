@@ -46,32 +46,41 @@ dbConnect();
 // Middleware d'authentification
 app.use(verifyJWT);
 
-// Routes
-app.get("/", (req, res) => {
+const verifyToken = (req, res, next) => {
   if (req.user) {
-    res.redirect("/journal");
+    next();
   } else {
-    res.redirect("/auth");
+    return res.redirect("/auth");
   }
+}
+
+// Routes
+app.get("/", verifyToken, (req, res) => {
+  return res.redirect("/journal");
 });
+
+
 
 // Routes spécifiques
 app.use("/auth", authRoutes);
-app.use("/journal", journalRoutes);
+app.use("/journal", verifyToken, journalRoutes);
 app.use("/register", registerRoutes);
-app.use("/logout", logoutRoutes);
+app.use("/logout", verifyToken, logoutRoutes);
 
 // Gestion des erreurs 404
 app.use((req, res) => {
-  res.status(404).render("error", { message: "Page non trouvée" });
+  return res.status(404).render("error", { message: "Page non trouvée" });
 });
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
+
+
+
   console.error(err.stack);
   const status = err.status || 500;
   const message = err.message || "Une erreur est survenue";
-  res.status(status).render("error", {
+  return res.status(status).render("error", {
     message,
     error: process.env.NODE_ENV === "development" ? err : {},
   });
